@@ -55,37 +55,9 @@ app.get('/', function(req, res) {
 	res.end();
 });
 
-
-
 app.listen(8080);
-
-
-
-
-
-
-
-
-
-
-//couchMethods._create("test", function(err) {
-//	console.log(err);
-//});
-//
-//_insert("test", {_id:"linkid", link:["google.com"]},function(stuff) {
-//	console.log(stuff);
-//
-//});
-//
 //_update("test", { _id:"linkid", _rev:"1-xxx", link:["poohttp://www.google.com"]}, function(stuff) {
 //	console.log(stuff);
 //
 //
 //}); 
-//
-//_drop("test", function(err) {
-//	console.log(err);
-//});
-
-
-
