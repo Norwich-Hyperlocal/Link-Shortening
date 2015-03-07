@@ -1,0 +1,23 @@
+{
+  "name": "Link_Shortener",
+  "version": "0.0.0",
+  "description": "Node.js link shortener",
+  "main": "app.js",
+  "dependencies": {
+    "express": "~4.12.2",
+    "node-couchdb": "~0.3.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Norwich-Hyperlocal/Link-Shortening.git"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/Norwich-Hyperlocal/Link-Shortening/issues"
+  }
+}
