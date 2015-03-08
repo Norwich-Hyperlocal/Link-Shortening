@@ -1,0 +1,14 @@
+{
+  "name": "Link_Shortener",
+  "version": "0.0.1",
+  "dependencies": {
+    "jquery": "~1.10.2"
+  },
+  "install": {
+    "path": {
+      "css": "public/stylesheets/vendor",
+      "js": "public/javascripts/vendor"
+    },
+    "private": true
+  }
+}
