@@ -98,6 +98,7 @@ app.get('/:url', function(req, res) {
 		if(data.url !== undefined) {
 			res.redirect(data.url);		
 		} else {
+			req.session['success'] = "This isn't a valid url thingy. Go away.";
 			res.redirect("/");	
 		}
 	
