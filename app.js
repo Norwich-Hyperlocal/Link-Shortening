@@ -4,6 +4,7 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var http = require("http");
+var validator = require("validator");
 var couchDB = require("node-couchdb");
 var couch = new couchDB("127.0.0.1", 5984);
 var couchMethods = require("./lib/methods")(couch, http);
@@ -19,10 +20,17 @@ app.use(bodyParser.json());
 app.post('/api/store', function(req, res) {
 	var query = req["body"], url = query.url;
 	var uID = 0;
-	//TODO: Add check to see if URL is valid (regex yay). Implement a better uID system!!
+	//TODO: Fixed(Add check to see if URL is valid (regex yay)). Implement a better uID system!!
 	var linkCount = couchMethods._getDatabase("test", function(res1) {
-		//Increment our ID counter
-		uID = (res1["doc_count"]+1).toString(32);
+	//Increment our ID counter
+	uID = (res1["doc_count"]+1).toString(32);
+
+	/* Check url */
+	var isUrl = validator.isURL(url, {protocols:['http', 'https'], require_tld: false, require_protocol: true, allow_underscores: false, host_whitelist: false, host_blacklist: false, allow_trailing_dot: false, allow_protocol_relative_urls: false });
+		if(!isUrl) {
+			res.write(JSON.stringify({res: null, info: "Invalid Url"}));
+			res.end();
+		} 
 		var request = store(uID, url, function(err) {
 			res.write(JSON.stringify({res: uID, info: err}));
 			res.end();	
@@ -43,7 +51,7 @@ function get(id, callback) {
 	var newData = [id];
 	var response = "";
 	couchMethods._get("test", newData, function(res, err) {
-		callback(JSON.stringify(res["data"]), err);
+		callback(res["data"], err);
 	});
 }
 
@@ -66,6 +74,16 @@ app.get('/', function(req, res) {
 	res.end();
 });
 
+app.get('/:url', function(req, res) {
+	var url = req.params.url;
+	//See if the database has the magic redirect
+	var request = get(url, function(data, err) {
+		res.redirect(data.url);
+		console.log(data);
+	});
+
+
+});
 app.listen(8080);
 //_update("test", { _id:"linkid", _rev:"1-xxx", link:["poohttp://www.google.com"]}, function(stuff) {
 //	console.log(stuff);
