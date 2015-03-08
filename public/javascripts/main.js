@@ -12,6 +12,7 @@
 				$.post("api/store", {url: urlInput.val()}, function(res) {
 					var parsed = JSON.parse(res);
 					var id = parsed["res"];
+					console.log(parsed);
 					if(id == null) {
 						urlInput.val("Error: " + parsed["info"]);
 						urlInput.select();

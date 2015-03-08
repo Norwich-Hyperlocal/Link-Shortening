@@ -11,9 +11,31 @@ var couchMethods = require("./lib/methods")(couch, http);
 
 
 var app = module.exports = express();
+
+var database = "links";
+
+
 /* config */
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+
+/* Does database exist!? */
+var databaseExist = couchMethods._getDatabase(database, function(res1) {
+	if(res1.error == "not_found") {
+		console.log("OH NOES, NO DATABASE, let's make one");
+		couchMethods._create(database, function(mes) {
+			console.log(mes);
+		});	
+	} else {
+		console.log("Database is here, no need to panic");
+	}
+
+});
+
+
+
+
 
 /* Handle Post To API */
 /* TODO: replace anonymous functions with routes */
@@ -21,10 +43,9 @@ app.post('/api/store', function(req, res) {
 	var query = req["body"], url = query.url;
 	var uID = 0;
 	//TODO: Fixed(Add check to see if URL is valid (regex yay)). Implement a better uID system!!
-	var linkCount = couchMethods._getDatabase("test", function(res1) {
+	var linkCount = couchMethods._getDatabase(database, function(res1) {
 	//Increment our ID counter
 	uID = (res1["doc_count"]+1).toString(32);
-
 	/* Check url */
 	var isUrl = validator.isURL(url, {protocols:['http', 'https'], require_tld: false, require_protocol: true, allow_underscores: false, host_whitelist: false, host_blacklist: false, allow_trailing_dot: false, allow_protocol_relative_urls: false });
 		if(!isUrl) {
@@ -50,7 +71,7 @@ app.get('/api/getdomain', function(req, res) {
 function get(id, callback) {
 	var newData = [id];
 	var response = "";
-	couchMethods._get("test", newData, function(res, err) {
+	couchMethods._get(database, newData, function(res, err) {
 		callback(res["data"], err);
 	});
 }
@@ -60,7 +81,7 @@ function get(id, callback) {
 function store(id, url, callback) {
 	var newData = {_id: id, url: url};
 	var stuffs = "";
-	couchMethods._insert("test", newData, function(err) {
+	couchMethods._insert(database, newData, function(err) {
 		callback(err);
 	});
 	return stuffs;
@@ -85,7 +106,7 @@ app.get('/:url', function(req, res) {
 
 });
 app.listen(8080);
-//_update("test", { _id:"linkid", _rev:"1-xxx", link:["poohttp://www.google.com"]}, function(stuff) {
+//_update(database, { _id:"linkid", _rev:"1-xxx", link:["poohttp://www.google.com"]}, function(stuff) {
 //	console.log(stuff);
 //
 //
