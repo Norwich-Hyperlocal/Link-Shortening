@@ -1,0 +1,29 @@
+body {
+	background: black;
+
+}
+
+
+.contain {
+	margin: 0 auto;
+	height: 100px;	
+	text-align: center;
+	position: relative;
+	top: 300px;
+	font-size: 0;
+	padding-top: 49px;
+	border: 1px dotted white;
+
+}
+
+#urlInput {
+	text-align: left;
+	height: 50px;
+	box-sizing: border-box;
+	font-size: large;
+}
+
+#urlGo {
+	height:51px;
+	box-sizing: border-box;
+}
