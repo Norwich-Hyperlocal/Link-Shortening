@@ -5,6 +5,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var http = require("http");
 var validator = require("validator");
+var ip = require("ip");
 var couchDB = require("node-couchdb");
 var couch = new couchDB("127.0.0.1", 5984);
 var couchMethods = require("./lib/methods")(couch, http);
@@ -13,7 +14,8 @@ var couchMethods = require("./lib/methods")(couch, http);
 var app = module.exports = express();
 
 var database = "links";
-
+var port = 80;
+var ipAddr = ip.address();
 
 /* config */
 app.use(bodyParser.urlencoded({extended: false}));
@@ -45,11 +47,11 @@ app.post('/api/store', function(req, res) {
 	/* Check url */
 	var isUrl = validator.isURL(url, {protocols:['http', 'https'], require_tld: false, require_protocol: true, allow_underscores: false, host_whitelist: false, host_blacklist: false, allow_trailing_dot: false, allow_protocol_relative_urls: false });
 		if(!isUrl) {
-			res.write(JSON.stringify({res: null, info: "Invalid Url"}));
+			res.write(JSON.stringify({res: null, info: "Invalid Url", ip: ipAddr}));
 			res.end();
 		} 
 		var request = store(uID, url, function(err) {
-			res.write(JSON.stringify({res: uID, info: err}));
+			res.write(JSON.stringify({res: uID, info: err, ip:ipAddr}));
 			res.end();	
 		});
 	}); 	
@@ -103,7 +105,12 @@ app.get('/:url', function(req, res) {
 	
 	});
 });
-app.listen(8080);
+
+
+app.listen(port);
+
+
+
 //_update(database, { _id:"linkid", _rev:"1-xxx", link:["poohttp://www.google.com"]}, function(stuff) {
 //	console.log(stuff);
 //

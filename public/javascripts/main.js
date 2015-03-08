@@ -12,12 +12,12 @@
 				$.post("api/store", {url: urlInput.val()}, function(res) {
 					var parsed = JSON.parse(res);
 					var id = parsed["res"];
-					console.log(parsed);
+					var ip = parsed["ip"];
 					if(id == null) {
 						urlInput.val("Error: " + parsed["info"]);
 						urlInput.select();
 					} else {
-						urlInput.val("127.0.0.1:8080/" + id);
+						urlInput.val(ip+"/" + id);
 						urlInput.select();
 					}
 				}); 
