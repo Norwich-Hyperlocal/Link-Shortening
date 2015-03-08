@@ -2,7 +2,7 @@
 Node.js link shortener
 
 
-
+Live Demo(yay): http://178.62.125.13/
 
 HOW TO RUN:
 
@@ -18,5 +18,5 @@ Make sure bower is installed: type bower. If it isn't, sudo npm install bower -g
 2) bower install
 
 3) npm start
-
-4) running on 127.0.0.1:8080
+3.14) npm start may not work because of not letting you run on ports < 1000 or something. If this happens either change to 8080 or 3000 or something or just run as superuser.
+4) running on 127.0.0.1:80
