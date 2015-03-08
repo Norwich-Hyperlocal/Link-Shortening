@@ -55,11 +55,15 @@ app.post('/api/store', function(req, res) {
 			res.end();
 		} 
 		//Otherwise create a request to store the url in the database and write the uID on completion
-		var request = store(uID, url, function(err) {
+		store(uID, url, function(err) {
 			//Return the results
-			//TODO: What if there is an error in the database request?? We're still returning the uID even if it fails.
-			res.write(JSON.stringify({res: uID, info: err, ip:ipAddr}));
-			res.end();	
+			if(err) {
+				res.write(JSON.stringify({info: err}));
+				res.end();
+			} else {
+				res.write(JSON.stringify({res: uID, info: err, ip:ipAddr}));
+				res.end();
+			}					
 		});
 	}); 	
 });
@@ -106,8 +110,13 @@ app.get('/:url', function(req, res) {
 	var request = get(url, function(data, err) {
 		if(data.url !== undefined) {
 			res.redirect(data.url);		
-		} else {
-			res.redirect("/");	
+		} else {	
+			res.writeHead(200, {'Content-Type': 'text/html'});
+			res.write("404, redirect not found");
+			res.write("<br/>");
+			res.write("URL for UID: " + url + "<br/>" + " Could not be found :(");
+			res.write("<b>But remember.. things could be worse!</b>");
+			res.end();
 		}
 	
 	});
