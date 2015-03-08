@@ -17,7 +17,7 @@
 						urlInput.val("Error: " + parsed["info"]);
 						urlInput.select();
 					} else {
-						urlInput.val(ip+"/" + id);
+						urlInput.val("http://"+ip+"/" + id);
 						urlInput.select();
 					}
 				}); 
