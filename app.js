@@ -33,10 +33,6 @@ var databaseExist = couchMethods._getDatabase(database, function(res1) {
 
 });
 
-
-
-
-
 /* Handle Post To API */
 /* TODO: replace anonymous functions with routes */
 app.post('/api/store', function(req, res) {
@@ -99,11 +95,13 @@ app.get('/:url', function(req, res) {
 	var url = req.params.url;
 	//See if the database has the magic redirect
 	var request = get(url, function(data, err) {
-		res.redirect(data.url);
-		console.log(data);
+		if(data.url !== undefined) {
+			res.redirect(data.url);		
+		} else {
+			res.redirect("/");	
+		}
+	
 	});
-
-
 });
 app.listen(8080);
 //_update(database, { _id:"linkid", _rev:"1-xxx", link:["poohttp://www.google.com"]}, function(stuff) {
