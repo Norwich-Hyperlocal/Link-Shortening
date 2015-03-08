@@ -16,6 +16,7 @@ var app = module.exports = express();
 var database = "links";
 var port = 80;
 var ipAddr = ip.address();
+var validatorConfig =  {protocols:['http', 'https'], require_tld: false, require_protocol: true, allow_underscores: false, host_whitelist: false, host_blacklist: false, allow_trailing_dot: false, allow_protocol_relative_urls: false};
 
 /* config */
 app.use(bodyParser.urlencoded({extended: false}));
@@ -38,19 +39,25 @@ var databaseExist = couchMethods._getDatabase(database, function(res1) {
 /* Handle Post To API */
 /* TODO: replace anonymous functions with routes */
 app.post('/api/store', function(req, res) {
+	//Get url to store from query body
 	var query = req["body"], url = query.url;
 	var uID = 0;
-	//TODO: Fixed(Add check to see if URL is valid (regex yay)). Implement a better uID system!!
+	//TODO: Implement a better uID system!!
 	var linkCount = couchMethods._getDatabase(database, function(res1) {
 	//Increment our ID counter
 	uID = (res1["doc_count"]+1).toString(32);
 	/* Check url */
-	var isUrl = validator.isURL(url, {protocols:['http', 'https'], require_tld: false, require_protocol: true, allow_underscores: false, host_whitelist: false, host_blacklist: false, allow_trailing_dot: false, allow_protocol_relative_urls: false });
+	var isUrl = validator.isURL(url, validatorConfig);
+		//If the url isn't valid tell the user
 		if(!isUrl) {
 			res.write(JSON.stringify({res: null, info: "Invalid Url", ip: ipAddr}));
+			//Then end the page write
 			res.end();
 		} 
+		//Otherwise create a request to store the url in the database and write the uID on completion
 		var request = store(uID, url, function(err) {
+			//Return the results
+			//TODO: What if there is an error in the database request?? We're still returning the uID even if it fails.
 			res.write(JSON.stringify({res: uID, info: err, ip:ipAddr}));
 			res.end();	
 		});
