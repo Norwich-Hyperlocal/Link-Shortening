@@ -2,7 +2,7 @@
 Node.js link shortener
 
 
-Live Demo(yay): http://178.62.125.13/
+(not so)Live Demo(yay): http://178.62.125.13/ Server is dead :'(
 
 HOW TO RUN:
 
